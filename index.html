@@ -11,176 +11,259 @@
             --text-main: #1a1a1a;
             --text-muted: #666666;
             --accent: #ff6b4a;
-            --accent-hover: #e05537;
             --border: #e8e3dc;
-            --shadow: 0 4px 15px rgba(0,0,0,0.05);
-            --radius: 14px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.04);
+            --radius: 12px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 80px; }
+        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; }
 
         /* Typography */
-        h1, h2, h3 { font-family: "Georgia", "Times New Roman", serif; color: #111111; font-weight: 700; }
+        h1, h2, h3, h4 { font-family: "Georgia", "Times New Roman", serif; color: #111111; font-weight: 700; }
 
         /* Header & Smart Search */
-        header { background: var(--card-bg); padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); sticky: top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        header { 
+            background: var(--card-bg); 
+            padding: 1rem 1.2rem; 
+            border-bottom: 1px solid var(--border); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
         .logo { font-size: 1.4rem; color: var(--accent); font-weight: 800; font-family: "Georgia", serif; }
-        .search-box { width: 55%; position: relative; }
-        .search-box input { width: 100%; padding: 0.5rem 0.8rem; border-radius: 20px; border: 1px solid var(--border); background: #f4f0ea; font-size: 0.85rem; outline: none; }
+        .search-box { width: 55%; }
+        .search-box input { 
+            width: 100%; 
+            padding: 0.5rem 0.8rem; 
+            border-radius: 20px; 
+            border: 1px solid var(--border); 
+            background: #f4f0ea; 
+            font-size: 0.85rem; 
+            outline: none; 
+        }
 
-        /* Container */
-        .container { max-width: 600px; margin: 0 auto; padding: 1.2rem; }
+        /* Main Container */
+        .container { max-width: 650px; margin: 0 auto; padding: 1.2rem; }
 
-        /* Dashboard Stats */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1.5rem; }
-        .stat-card { background: var(--card-bg); padding: 0.8rem; border-radius: var(--radius); text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .stat-val { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
-        .stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+        /* Module Sections */
+        .module-header {
+            margin: 1.8rem 0 1rem 0;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid var(--accent);
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
 
-        /* Section Cards */
-        .card { background: var(--card-bg); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1.2rem; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
-        .badge { background: #ffeae5; color: var(--accent); padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        /* Topic Cards */
+        .card { 
+            background: var(--card-bg); 
+            border-radius: var(--radius); 
+            padding: 1.4rem; 
+            margin-bottom: 1.5rem; 
+            border: 1px solid var(--border); 
+            box-shadow: var(--shadow);
+            position: relative;
+        }
         
-        p { line-height: 1.5; color: #444444; font-size: 0.95rem; margin-bottom: 0.8rem; }
+        .badge { 
+            display: inline-block;
+            background: #ffeae5; 
+            color: var(--accent); 
+            padding: 0.25rem 0.6rem; 
+            border-radius: 6px; 
+            font-size: 0.75rem; 
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
 
-        /* Interactive Simulation Box */
-        .sim-box { background: #fdfaf6; border: 2px dashed var(--accent); padding: 1rem; border-radius: 10px; text-align: center; margin: 1rem 0; }
-        .sim-canvas { background: #222; height: 120px; border-radius: 8px; margin: 0.8rem 0; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 0.85rem; position: relative; overflow: hidden; }
+        h3.topic-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            color: #1a1a1a;
+        }
         
-        /* Interactive Controls */
-        .sim-btn { background: var(--accent); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .sim-btn:hover { background: var(--accent-hover); }
-        .slider-group { margin: 0.8rem 0; text-align: left; }
-        .slider-group label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
-        .slider-group input { width: 100%; }
+        p { color: #333333; font-size: 0.95rem; margin-bottom: 0.8rem; }
+        
+        /* Information Boxes */
+        .box-example { background: #f5f3ff; border-left: 4px solid #818cf8; padding: 0.8rem; margin: 0.8rem 0; border-radius: 0 4px 4px 0; font-size: 0.9rem; }
+        .box-relevance { background: #eff6ff; border-left: 4px solid var(--accent); padding: 0.8rem; margin: 0.8rem 0; border-radius: 0 4px 4px 0; font-size: 0.9rem; }
+        .box-summary { background: #f0fdf4; border-left: 4px solid #22c55e; padding: 0.8rem; margin: 0.8rem 0; border-radius: 0 4px 4px 0; font-size: 0.9rem; }
 
-        /* Tab Content Switching */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        /* Bottom Bar Navigation */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 0.8rem 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.03); }
-        .nav-item { text-align: center; color: var(--text-muted); text-decoration: none; font-size: 0.75rem; cursor: pointer; }
-        .nav-item.active { color: var(--accent); font-weight: bold; }
-        .nav-icon { font-size: 1.2rem; display: block; margin-bottom: 0.2rem; }
+        ul { margin-left: 1.2rem; margin-bottom: 0.8rem; font-size: 0.95rem; color: #333333; }
+        li { margin-bottom: 0.3rem; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Top Navigation Bar -->
     <header>
         <div class="logo">RadLab+</div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search topics, formulas..." onkeyup="searchApp()">
+            <input type="text" id="searchInput" placeholder="Search topics..." onkeyup="searchApp()">
         </div>
     </header>
 
-    <div class="container">
+    <div class="container" id="main-content">
 
-        <!-- TAB 1: HOME DASHBOARD -->
-        <div id="home-tab" class="tab-content active">
-            
-            <!-- Gamification Stats -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-val">🔥 5 Days</div>
-                    <div class="stat-lbl">Daily Streak</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val">⚡ 350</div>
-                    <div class="stat-lbl">Total XP</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val">🎯 82%</div>
-                    <div class="stat-lbl">Mastery Score</div>
-                </div>
-            </div>
+        <!-- MODULE 1: FOUNDATIONS -->
+        <h2 class="module-header">Module 1: Radiation Physics Foundations</h2>
 
-            <h2>Preclinical Modules</h2>
-            <br>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">1. Nature of Matter</h3>
+            <p>Before we can understand X-rays, we first need to understand what they pass through. That brings us to matter.</p>
+            <p><strong>Definition:</strong> Matter is anything that has mass and occupies space. Everything around us, including the human body, air, water, and X-ray equipment, is made of matter. Matter exists in three main states: solid, liquid, and gas.</p>
+            <div class="box-example"><strong>Example:</strong> Bones are solids, blood is a liquid, and air in the lungs is a gas.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers need to understand matter because X-rays interact differently with different types of matter. Bones absorb more X-rays than soft tissues, while air absorbs the least. This difference produces the contrast seen on radiographs.</div>
+            <div class="box-summary"><strong>Summary:</strong> Matter is anything with mass and volume, and all body tissues are forms of matter that interact differently with X-rays.</div>
+        </section>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3>Radiation Physics</h3>
-                    <span class="badge">MVP Scope</span>
-                </div>
-                <p>Master atomic structure, X-ray production, equipment, transformers, and exposure factors.</p>
-                <button class="sim-btn" onclick="switchTab('learn')">Start Learning →</button>
-            </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">2. Atomic Structure</h3>
+            <p><strong>Definition:</strong> An atom is the smallest unit of an element that retains its chemical properties. It consists of a nucleus containing protons (positive charge) and neutrons (no charge), while electrons (negative charge) move around the nucleus in energy shells. Most interactions between X-rays and matter involve the electrons.</p>
+            <div class="box-example"><strong>Example:</strong> The tungsten target inside the X-ray tube is made of tungsten atoms. When fast-moving electrons strike these atoms, X-rays are produced.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding atomic structure helps explain how X-rays are produced, how ionization occurs, and why different tissues absorb radiation differently.</div>
+            <div class="box-summary"><strong>Summary:</strong> Atoms are the basic building blocks of matter, and their electrons play a major role in X-ray production and radiation interactions.</div>
+        </section>
 
-            <div class="card">
-                <div class="card-header">
-                    <h3>Radiation Protection</h3>
-                    <span class="badge">Core</span>
-                </div>
-                <p>Understand ALARA principles, dose limits, monitoring, and shielding design.</p>
-                <button class="sim-btn" onclick="switchTab('learn')">Explore Protection →</button>
-            </div>
-        </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">3. Electromagnetic Spectrum</h3>
+            <p><strong>Definition:</strong> The electromagnetic spectrum is the complete range of electromagnetic waves arranged according to their wavelength and frequency. It includes radio waves, microwaves, infrared rays, visible light, ultraviolet rays, X-rays, and gamma rays. X-rays have short wavelengths and high frequencies, giving them enough energy to penetrate the body.</p>
+            <ul>
+                <li><strong>Long wavelength</strong> = Low frequency = Low energy</li>
+                <li><strong>Short wavelength</strong> = High frequency = High energy</li>
+            </ul>
+            <div class="box-example"><strong>Example:</strong> Visible light allows us to see objects, while X-rays allow radiographers to see structures inside the body.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers use the X-ray portion of the electromagnetic spectrum because it provides enough energy to produce diagnostic images while allowing exposure to be carefully controlled.</div>
+            <div class="box-summary"><strong>Summary:</strong> The electromagnetic spectrum contains all electromagnetic waves, with high-energy X-rays used for medical imaging.</div>
+        </section>
 
-        <!-- TAB 2: LEARN & INTERACTIVE SIMULATIONS -->
-        <div id="learn-tab" class="tab-content">
-            
-            <h2>Radiation Physics Lessons</h2>
-            <br>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">4. Ionization</h3>
+            <p><strong>Definition:</strong> Ionization is the process by which an atom gains or loses electrons, becoming electrically charged. In diagnostic radiography, X-rays have enough energy to remove electrons from atoms, creating positively charged ions. This process can lead to biological effects in living tissues.</p>
+            <div class="box-example"><strong>Example:</strong> When an X-ray photon strikes a body cell and removes an electron, ionization has occurred.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Ionization is responsible for both the formation of X-ray images and potential tissue damage, making radiation protection essential.</div>
+            <div class="box-summary"><strong>Summary:</strong> Ionization occurs when radiation removes an electron from an atom, creating an ion.</div>
+        </section>
 
-            <!-- Bohr Model Ionization Simulation -->
-            <div class="card topic-card">
-                <span class="badge">Foundations</span>
-                <h3 style="margin-top: 0.4rem;">1. Atomic Structure & Ionization</h3>
-                <p>When an X-ray photon strikes an atom with sufficient energy, it ejects an electron from its orbit, leaving behind a positively charged ion.</p>
-                
-                <div class="sim-box">
-                    <strong>Interactive Simulation: Bohr Model Ionization</strong>
-                    <div class="sim-canvas" id="bohrCanvas">
-                        <div id="nucleus" style="width: 20px; height: 20px; background: #ff6b4a; border-radius: 50%;"></div>
-                        <div id="electron" style="width: 10px; height: 10px; background: #38bdf8; border-radius: 50%; position: absolute; left: 65%;"></div>
-                    </div>
-                    <button class="sim-btn" onclick="runIonizeSim()">Tap to Ionize Atom</button>
-                    <p id="simStatus" style="font-size: 0.8rem; margin-top: 0.5rem; color: #666;">Atom Status: Neutral</p>
-                </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">5. Types of Radiation</h3>
+            <p><strong>Definition:</strong> Radiation is energy travelling from one place to another. It is divided into <strong>Electromagnetic Radiation</strong> (waves without mass, like X-rays) and <strong>Particulate Radiation</strong> (particles with mass, like alpha and beta particles). Radiation is also classified as <strong>Ionizing</strong> or <strong>Non-Ionizing</strong>.</p>
+            <div class="box-example"><strong>Example:</strong> X-rays are ionizing electromagnetic radiation, while visible light is non-ionizing radiation.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers work mainly with ionizing radiation because it can produce images but also has the potential to damage tissues if not properly controlled.</div>
+            <div class="box-summary"><strong>Summary:</strong> Radiation may travel as waves or particles and can be ionizing or non-ionizing.</div>
+        </section>
 
-                <p><strong>Clinical Relevance:</strong> Ionization produces the contrast needed for radiographs, but can cause biological tissue damage if uncontrolled.</p>
-            </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">6. Units of Radiation</h3>
+            <p><strong>Definition:</strong> Radiation is measured using different units depending on what is being assessed:</p>
+            <ul>
+                <li><strong>Becquerel (Bq):</strong> Measures the activity of a radioactive source.</li>
+                <li><strong>Gray (Gy):</strong> Measures the absorbed dose of radiation in tissue.</li>
+                <li><strong>Sievert (Sv):</strong> Measures the overall biological effect of radiation on living tissue.</li>
+            </ul>
+            <div class="box-example"><strong>Example:</strong> A patient's radiation dose during a procedure is commonly expressed in milligray (mGy) or millisievert (mSv).</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Knowledge of radiation units helps radiographers monitor patient doses, compare procedures, and ensure safe radiation practice.</div>
+            <div class="box-summary"><strong>Summary:</strong> Becquerel measures activity, Gray measures absorbed dose, and Sievert measures biological effect.</div>
+        </section>
 
-            <!-- Cathode Thermionic Emission Simulation -->
-            <div class="card topic-card">
-                <span class="badge">X-ray Production</span>
-                <h3 style="margin-top: 0.4rem;">2. Cathode & Thermionic Emission</h3>
-                <p>Heating the tungsten filament in the cathode releases free electrons into space via <em>thermionic emission</em>.</p>
-                
-                <div class="sim-box">
-                    <strong>Interactive Simulation: Filament Heat Control</strong>
-                    <div class="slider-group">
-                        <label>Filament Heat (mA Control):</label>
-                        <input type="range" id="heatSlider" min="1" max="10" value="3" oninput="updateHeatSim(this.value)">
-                    </div>
-                    <div class="sim-canvas" id="cathodeCanvas" style="background: #111;">
-                        <span id="cloudText">Electron Cloud Density: Low</span>
-                    </div>
-                </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">7. Basic Electricity</h3>
+            <p><strong>Definition:</strong> Electricity is the movement of electrons through a conductor. An electric current flows when a voltage pushes electrons through a circuit. In an X-ray machine, electricity supplies energy to heat the filament and accelerate electrons toward the anode.</p>
+            <div class="box-example"><strong>Example:</strong> Switching on an X-ray machine allows electric current to heat the cathode filament.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Electricity is essential for producing X-rays and operating every component of the X-ray machine.</div>
+            <div class="box-summary"><strong>Summary:</strong> Electricity provides the pushing force (voltage) and electron movement needed for X-ray production.</div>
+        </section>
 
-                <p><strong>Clinical Relevance:</strong> Increasing mAs increases filament heat, producing more electrons and a higher quantity of X-rays.</p>
-            </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">8. Magnetism</h3>
+            <p><strong>Definition:</strong> Magnetism is the force produced by moving electric charges. Electricity and magnetism are closely related because an electric current creates a magnetic field around its conductor.</p>
+            <div class="box-example"><strong>Example:</strong> Electric motors inside rotating anode X-ray tubes spin using magnetic induction principles.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding magnetism explains how motors inside X-ray equipment operate and lays the foundation for MRI physics.</div>
+            <div class="box-summary"><strong>Summary:</strong> Moving electrons create magnetic fields, making electricity and magnetism closely related.</div>
+        </section>
 
-            <!-- Inverse Square Law Simulation -->
-            <div class="card topic-card">
-                <span class="badge">Exposure Factors</span>
-                <h3 style="margin-top: 0.4rem;">3. Inverse Square Law</h3>
-                <p>Radiation intensity is inversely proportional to the square of the distance from the source ($I_1 / I_2 = D_2^2 / D_1^2$).</p>
-                
-                <div class="sim-box">
-                    <strong>Interactive Simulation: Distance vs. Beam Spread</strong>
-                    <div class="slider-group">
-                        <label>Source-to-Image Distance (SID): <span id="distVal">1</span> meter</label>
-                        <input type="range" min="1" max="4" value="1" id="distSlider" oninput="updateDistSim(this.value)">
-                    </div>
-                    <p>Calculated Intensity: <strong id="intensityVal" style="color: var(--accent);">100%</strong></p>
-                </div>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">9. Wave Properties</h3>
+            <p><strong>Definition:</strong> A wave is a disturbance that transfers energy. The main wave properties are <strong>Wavelength</strong> (distance between waves), <strong>Frequency</strong> (waves per second in Hz), <strong>Amplitude</strong> (wave height), and <strong>Velocity</strong> (speed of wave travel).</p>
+            <div class="box-example"><strong>Example:</strong> X-rays have much shorter wavelengths and higher frequencies than visible light.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Wave properties explain why X-rays can penetrate human body tissue while visible light cannot.</div>
+            <div class="box-summary"><strong>Summary:</strong> Wave properties determine how electromagnetic waves travel and interact with matter.</div>
+        </section>
 
-                <p><strong>Clinical Relevance:</strong> Doubling your distance from the X-ray tube reduces your radiation exposure to 1/4 (25%).</p>
+        <section class="card topic-card">
+            <span class="badge">Basic Physics</span>
+            <h3 class="topic-title">10. Energy and Frequency</h3>
+            <p><strong>Definition:</strong> Frequency and energy are directly proportional. Higher-frequency waves carry higher energy. Because X-rays have very high frequencies, they carry enough energy to pass through soft tissues while being absorbed by dense bones.</p>
+            <div class="box-example"><strong>Example:</strong> Gamma rays and X-rays have much higher frequencies and energies than radio waves or visible light.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Higher-frequency beams provide greater penetration, directly relating to exposure factors like kVp.</div>
+            <div class="box-summary"><strong>Summary:</strong> Higher frequency means higher energy, giving X-rays their penetrating power.</div>
+        </section>
+
+
+        <!-- MODULE 2: X-RAY PRODUCTION & EQUIPMENT -->
+        <h2 class="module-header">Module 2: X-ray Production & Equipment</h2>
+
+        <section class="card topic-card">
+            <span class="badge">Production & Equipment</span>
+            <h3 class="topic-title">1. X-ray Tube</h3>
+            <p><strong>Definition:</strong> The X-ray tube is the sealed vacuum glass/metal tube where X-rays are generated. The vacuum prevents fast-moving electrons from colliding with air molecules before hitting the target.</p>
+            <div class="box-example"><strong>Example:</strong> Every chest or extremity X-ray requires the X-ray tube to generate the primary beam.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> The X-ray tube is the heart of the system. If it fails or overheats, no diagnostic image can be produced.</div>
+            <div class="box-summary"><strong>Summary:</strong> The X-ray tube provides a vacuum environment where electrons are accelerated to create X-rays.</div>
+        </section>
+
+        <section class="card topic-card">
+            <span class="badge">Production & Equipment</span>
+            <h3 class="topic-title">2. Cathode and Anode</h3>
+            <p><strong>Definition:</strong> The **Cathode** is the negative electrode containing a filament that releases electrons via *thermionic emission* when heated. The **Anode** is the positive electrode containing a tungsten target that attracts electrons and converts their kinetic energy into heat and X-rays.</p>
+            <div class="box-example"><strong>Example:</strong> Millions of electrons travel from the heated cathode filament to strike the tungsten anode target during an exposure.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Tungsten is used due to its high melting point and high atomic number, helping withstand intense heat.</div>
+            <div class="box-summary"><strong>Summary:</strong> Cathode releases electrons; Anode converts their energy into X-rays and heat.</div>
+        </section>
+
+        <section class="card topic-card">
+            <span class="badge">Production & Equipment</span>
+            <h3 class="topic-title">3. Tube Housing</h3>
+            <p><strong>Definition:</strong> The protective lead-lined outer casing surrounding the X-ray tube. It contains insulating oil for cooling and electrical protection, absorbing leakage radiation so only the primary beam leaves through the tube window.</p>
+            <div class="box-example"><strong>Example:</strong> About 99% of kinetic energy becomes heat; insulating oil absorbs this heat during routine procedures.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Tube housing protects patients and radiographers from excessive heat buildup and off-focus leakage radiation.</div>
+            <div class="box-summary"><strong>Summary:</strong> Tube housing provides radiation shielding, oil cooling, and electrical protection.</div>
+        </section>
+
+        <section class="card topic-card">
+            <span class="badge">Production & Equipment</span>
+            <h3 class="topic-title">4. Bremsstrahlung Radiation</h3>
+            <p><strong>Definition:</strong> "Bremsstrahlung" means braking radiation. Occurs when a high-speed electron passes near the nucleus of a tungsten atom, slows down, changes direction, and releases its lost energy as an X-ray photon.</p>
+            <div class="box-example"><strong>Example:</strong> About 85% to 90% of diagnostic X-rays produced in the beam are Bremsstrahlung radiation.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Bremsstrahlung radiation provides the majority of useful diagnostic photons in the primary beam.</div>
+            <div class="box-summary"><strong>Summary:</strong> Produced when fast electrons slow down and deflect near the tungsten nucleus.</div>
+        </section>
+
+        <section class="card topic-card">
+            <span class="badge">Production & Equipment</span>
+            <h3 class="topic-title">5. Characteristic Radiation</h3>
+            <p><strong>Definition:</strong> Occurs when a high-speed electron knocks out an inner-shell electron of a tungsten atom. An outer-shell electron drops down to fill the empty space, releasing the energy difference as an X-ray photon.</p>
+            <div class="box-example"><strong>Example:</strong> Characteristic X-rays are produced when K-shell vacancies are filled in tungsten target atoms.</div>
+            <div class="box-relevance"><strong>Clinical Relevance:</strong> Contributes useful discrete energy photons to the diagnostic beam at higher kVp levels.</div>
+            <div class="box-summary"><strong>Summary:</strong> Produced when outer-shell electrons fill inner-shell vacancies in target atoms.</div>
+        </section>
+
+        <section class="card topic-card">
+   distance from the X-ray tube reduces your radiation exposure to 1/4 (25%).</p>
             </div>
 
         </div>
