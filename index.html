@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,13 +11,14 @@
             --text-main: #1a1a1a;
             --text-muted: #666666;
             --accent: #ff6b4a;
+            --accent-hover: #e05537;
             --border: #e8e3dc;
-            --shadow: 0 4px 15px rgba(0,0,0,0.04);
-            --radius: 12px;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --radius: 14px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 85px; line-height: 1.6; }
 
         /* Typography */
         h1, h2, h3, h4 { font-family: "Georgia", "Times New Roman", serif; color: #111111; font-weight: 700; }
@@ -47,19 +48,30 @@
             outline: none; 
         }
 
-        /* Main Container */
+        /* Container & Tabs */
         .container { max-width: 650px; margin: 0 auto; padding: 1.2rem; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
-        /* Module Sections */
+        /* Dashboard Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--card-bg); padding: 0.8rem; border-radius: var(--radius); text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .stat-val { font-size: 1.1rem; font-weight: bold; color: var(--accent); }
+        .stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* Progress Bar */
+        .progress-box { background: #f0eae1; border-radius: 10px; height: 10px; width: 100%; overflow: hidden; margin: 0.5rem 0 1rem 0; }
+        .progress-fill { background: var(--accent); height: 100%; width: 68%; border-radius: 10px; }
+
+        /* Module Sections & Cards */
         .module-header {
-            margin: 1.8rem 0 1rem 0;
+            margin: 1.5rem 0 1rem 0;
             padding-bottom: 0.4rem;
             border-bottom: 2px solid var(--accent);
             color: var(--accent);
             font-size: 1.3rem;
         }
 
-        /* Topic Cards */
         .card { 
             background: var(--card-bg); 
             border-radius: var(--radius); 
@@ -67,7 +79,6 @@
             margin-bottom: 1.5rem; 
             border: 1px solid var(--border); 
             box-shadow: var(--shadow);
-            position: relative;
         }
         
         .badge { 
@@ -81,12 +92,7 @@
             margin-bottom: 0.6rem;
         }
 
-        h3.topic-title {
-            font-size: 1.25rem;
-            margin-bottom: 0.8rem;
-            color: #1a1a1a;
-        }
-        
+        h3.topic-title { font-size: 1.25rem; margin-bottom: 0.8rem; color: #1a1a1a; }
         p { color: #333333; font-size: 0.95rem; margin-bottom: 0.8rem; }
         
         /* Information Boxes */
@@ -96,6 +102,33 @@
 
         ul { margin-left: 1.2rem; margin-bottom: 0.8rem; font-size: 0.95rem; color: #333333; }
         li { margin-bottom: 0.3rem; }
+
+        /* Interactive Simulations */
+        .sim-box { background: #fcf9f5; border: 2px dashed var(--accent); padding: 1.2rem; border-radius: 12px; margin: 1.2rem 0; text-align: center; }
+        .sim-canvas { background: #1e1e1e; height: 130px; border-radius: 8px; margin: 0.8rem 0; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 0.85rem; position: relative; overflow: hidden; }
+        .sim-btn { background: var(--accent); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+        .sim-btn:hover { background: var(--accent-hover); }
+        .slider-group { margin: 0.8rem 0; text-align: left; }
+        .slider-group label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
+        .slider-group input { width: 100%; }
+
+        /* Bottom Navigation Bar */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            background: var(--card-bg); 
+            border-top: 1px solid var(--border); 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 0.6rem 0; 
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.04);
+            z-index: 1000;
+        }
+        .nav-item { text-align: center; color: var(--text-muted); text-decoration: none; font-size: 0.75rem; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--accent); font-weight: bold; }
+        .nav-icon { font-size: 1.2rem; display: block; margin-bottom: 0.2rem; }
     </style>
 </head>
 <body>
@@ -104,66 +137,176 @@
     <header>
         <div class="logo">RadLab+</div>
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search topics..." onkeyup="searchApp()">
+            <input type="text" id="searchInput" placeholder="Search topics, formulas..." onkeyup="searchApp()">
         </div>
     </header>
 
-    <div class="container" id="main-content">
+    <div class="container">
 
-        <!-- MODULE 1: FOUNDATIONS -->
-        <h2 class="module-header">Module 1: Radiation Physics Foundations</h2>
+        <!-- TAB 1: HOME DASHBOARD -->
+        <div id="home-tab" class="tab-content active">
+            <h2 style="margin-bottom: 0.8rem;">Welcome Back! 🎓</h2>
+            
+            <!-- Student Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val">🔥 5 Days</div>
+                    <div class="stat-lbl">Daily Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">⚡ 350</div>
+                    <div class="stat-lbl">Total XP</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">🎯 82%</div>
+                    <div class="stat-lbl">Mastery Score</div>
+                </div>
+            </div>
 
-        <section class="card topic-card">
-            <span class="badge">Basic Physics</span>
-            <h3 class="topic-title">1. Nature of Matter</h3>
-            <p>Before we can understand X-rays, we first need to understand what they pass through. That brings us to matter.</p>
-            <p><strong>Definition:</strong> Matter is anything that has mass and occupies space. Everything around us, including the human body, air, water, and X-ray equipment, is made of matter. Matter exists in three main states: solid, liquid, and gas.</p>
-            <div class="box-example"><strong>Example:</strong> Bones are solids, blood is a liquid, and air in the lungs is a gas.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers need to understand matter because X-rays interact differently with different types of matter. Bones absorb more X-rays than soft tissues, while air absorbs the least. This difference produces the contrast seen on radiographs.</div>
-            <div class="box-summary"><strong>Summary:</strong> Matter is anything with mass and volume, and all body tissues are forms of matter that interact differently with X-rays.</div>
-        </section>
+            <div class="card">
+                <h3>Today's Goal</h3>
+                <p style="margin-top: 0.3rem; margin-bottom: 0.2rem;">Complete 1 Simulation & Daily Quiz</p>
+                <div class="progress-box"><div class="progress-fill"></div></div>
+                <button class="sim-btn" onclick="switchTab('learn')">Continue Learning →</button>
+            </div>
 
-        <section class="card topic-card">
-            <span class="badge">Basic Physics</span>
-            <h3 class="topic-title">2. Atomic Structure</h3>
-            <p><strong>Definition:</strong> An atom is the smallest unit of an element that retains its chemical properties. It consists of a nucleus containing protons (positive charge) and neutrons (no charge), while electrons (negative charge) move around the nucleus in energy shells. Most interactions between X-rays and matter involve the electrons.</p>
-            <div class="box-example"><strong>Example:</strong> The tungsten target inside the X-ray tube is made of tungsten atoms. When fast-moving electrons strike these atoms, X-rays are produced.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding atomic structure helps explain how X-rays are produced, how ionization occurs, and why different tissues absorb radiation differently.</div>
-            <div class="box-summary"><strong>Summary:</strong> Atoms are the basic building blocks of matter, and their electrons play a major role in X-ray production and radiation interactions.</div>
-        </section>
+            <h3 style="margin-top: 1.5rem; margin-bottom: 0.8rem;">Learning Modules</h3>
 
-        <section class="card topic-card">
-            <span class="badge">Basic Physics</span>
-            <h3 class="topic-title">3. Electromagnetic Spectrum</h3>
-            <p><strong>Definition:</strong> The electromagnetic spectrum is the complete range of electromagnetic waves arranged according to their wavelength and frequency. It includes radio waves, microwaves, infrared rays, visible light, ultraviolet rays, X-rays, and gamma rays. X-rays have short wavelengths and high frequencies, giving them enough energy to penetrate the body.</p>
-            <ul>
-                <li><strong>Long wavelength</strong> = Low frequency = Low energy</li>
-                <li><strong>Short wavelength</strong> = High frequency = High energy</li>
-            </ul>
-            <div class="box-example"><strong>Example:</strong> Visible light allows us to see objects, while X-rays allow radiographers to see structures inside the body.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers use the X-ray portion of the electromagnetic spectrum because it provides enough energy to produce diagnostic images while allowing exposure to be carefully controlled.</div>
-            <div class="box-summary"><strong>Summary:</strong> The electromagnetic spectrum contains all electromagnetic waves, with high-energy X-rays used for medical imaging.</div>
-        </section>
+            <div class="card" onclick="switchTab('learn')" style="cursor: pointer;">
+                <span class="badge">MVP Scope</span>
+                <h3 style="margin-top: 0.3rem;">Radiation Physics</h3>
+                <p>Foundations, X-ray production, equipment, and exposure factors.</p>
+            </div>
 
-        <section class="card topic-card">
-            <span class="badge">Basic Physics</span>
-            <h3 class="topic-title">4. Ionization</h3>
-            <p><strong>Definition:</strong> Ionization is the process by which an atom gains or loses electrons, becoming electrically charged. In diagnostic radiography, X-rays have enough energy to remove electrons from atoms, creating positively charged ions. This process can lead to biological effects in living tissues.</p>
-            <div class="box-example"><strong>Example:</strong> When an X-ray photon strikes a body cell and removes an electron, ionization has occurred.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Ionization is responsible for both the formation of X-ray images and potential tissue damage, making radiation protection essential.</div>
-            <div class="box-summary"><strong>Summary:</strong> Ionization occurs when radiation removes an electron from an atom, creating an ion.</div>
-        </section>
+            <div class="card" onclick="switchTab('learn')" style="cursor: pointer;">
+                <span class="badge">MVP Scope</span>
+                <h3 style="margin-top: 0.3rem;">Radiation Protection</h3>
+                <p>ALARA principles, occupational protection, dose limits, and monitoring.</p>
+            </div>
+        </div>
 
-        <section class="card topic-card">
-            <span class="badge">Basic Physics</span>
-            <h3 class="topic-title">5. Types of Radiation</h3>
-            <p><strong>Definition:</strong> Radiation is energy travelling from one place to another. It is divided into <strong>Electromagnetic Radiation</strong> (waves without mass, like X-rays) and <strong>Particulate Radiation</strong> (particles with mass, like alpha and beta particles). Radiation is also classified as <strong>Ionizing</strong> or <strong>Non-Ionizing</strong>.</p>
-            <div class="box-example"><strong>Example:</strong> X-rays are ionizing electromagnetic radiation, while visible light is non-ionizing radiation.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers work mainly with ionizing radiation because it can produce images but also has the potential to damage tissues if not properly controlled.</div>
-            <div class="box-summary"><strong>Summary:</strong> Radiation may travel as waves or particles and can be ionizing or non-ionizing.</div>
-        </section>
+        <!-- TAB 2: LEARN MODULES & FULL CONTENT -->
+        <div id="learn-tab" class="tab-content">
 
-        <section class="card topic-card">
+            <!-- MODULE 1: RADIATION PHYSICS FOUNDATIONS -->
+            <h2 class="module-header">Module 1: Radiation Physics Foundations</h2>
+
+            <section class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 class="topic-title">1. Nature of Matter</h3>
+                <p>Before we can understand X-rays, we first need to understand what they pass through. That brings us to matter.</p>
+                <p><strong>Definition:</strong> Matter is anything that has mass and occupies space. Everything around us, including the human body, air, water, and X-ray equipment, is made of matter. Matter exists in three main states: solid, liquid, and gas.</p>
+                <div class="box-example"><strong>Example:</strong> Bones are solids, blood is a liquid, and air in the lungs is a gas.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers need to understand matter because X-rays interact differently with different types of matter. Bones absorb more X-rays than soft tissues, while air absorbs the least. This difference produces the contrast seen on radiographs.</div>
+                <div class="box-summary"><strong>Summary:</strong> Matter is anything with mass and volume, and all body tissues are forms of matter that interact differently with X-rays.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 class="topic-title">2. Atomic Structure</h3>
+                <p><strong>Definition:</strong> An atom is the smallest unit of an element that retains its chemical properties. It consists of a nucleus containing protons (positive charge) and neutrons (no charge), while electrons (negative charge) move around the nucleus in energy shells. Most interactions between X-rays and matter involve the electrons.</p>
+
+                <!-- Interactive Bohr Model Simulation -->
+                <div class="sim-box">
+                    <strong>Interactive Simulation: Bohr Model Ionization</strong>
+                    <div class="sim-canvas" id="bohrCanvas">
+                        <div style="width: 20px; height: 20px; background: #ff6b4a; border-radius: 50%;"></div>
+                        <div id="electron" style="width: 10px; height: 10px; background: #38bdf8; border-radius: 50%; position: absolute; left: 65%;"></div>
+                    </div>
+                    <button class="sim-btn" onclick="runIonizeSim()">Tap to Ionize Atom</button>
+                    <p id="simStatus" style="font-size: 0.8rem; margin-top: 0.5rem; color: #666;">Atom Status: Neutral</p>
+                </div>
+
+                <div class="box-example"><strong>Example:</strong> The tungsten target inside the X-ray tube is made of tungsten atoms. When fast-moving electrons strike these atoms, X-rays are produced.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding atomic structure helps explain how X-rays are produced, how ionization occurs, and why different tissues absorb radiation differently.</div>
+                <div class="box-summary"><strong>Summary:</strong> Atoms are the basic building blocks of matter, and their electrons play a major role in X-ray production and radiation interactions.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 class="topic-title">3. Electromagnetic Spectrum</h3>
+                <p><strong>Definition:</strong> The electromagnetic spectrum is the complete range of electromagnetic waves arranged according to their wavelength and frequency. It includes radio waves, microwaves, infrared rays, visible light, ultraviolet rays, X-rays, and gamma rays. X-rays have short wavelengths and high frequencies, giving them enough energy to penetrate the body.</p>
+                <ul>
+                    <li><strong>Long wavelength</strong> = Low frequency = Low energy</li>
+                    <li><strong>Short wavelength</strong> = High frequency = High energy</li>
+                </ul>
+                <div class="box-example"><strong>Example:</strong> Visible light allows us to see objects, while X-rays allow radiographers to see structures inside the body.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers use the X-ray portion of the electromagnetic spectrum because it provides enough energy to produce diagnostic images while allowing exposure to be carefully controlled.</div>
+                <div class="box-summary"><strong>Summary:</strong> The electromagnetic spectrum contains all electromagnetic waves, with high-energy X-rays used for medical imaging.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 class="topic-title">4. Ionization</h3>
+                <p><strong>Definition:</strong> Ionization is the process by which an atom gains or loses electrons, becoming electrically charged. In diagnostic radiography, X-rays have enough energy to remove electrons from atoms, creating positively charged ions. This process can lead to biological effects in living tissues.</p>
+                <div class="box-example"><strong>Example:</strong> When an X-ray photon strikes a body cell and removes an electron, ionization has occurred.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Ionization is responsible for both the formation of X-ray images and potential tissue damage, making radiation protection essential.</div>
+                <div class="box-summary"><strong>Summary:</strong> Ionization occurs when radiation removes an electron from an atom, creating an ion.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 class="topic-title">5. Types of Radiation</h3>
+                <p><strong>Definition:</strong> Radiation is energy travelling from one place to another. It is divided into <strong>Electromagnetic Radiation</strong> (waves without mass, like X-rays) and <strong>Particulate Radiation</strong> (particles with mass, like alpha and beta particles). Radiation is also classified as <strong>Ionizing</strong> or <strong>Non-Ionizing</strong>.</p>
+                <div class="box-example"><strong>Example:</strong> X-rays are ionizing electromagnetic radiation, while visible light is non-ionizing radiation.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers work mainly with ionizing radiation because it can produce images but also has the potential to damage tissues if not properly controlled.</div>
+                <div class="box-summary"><strong>Summary:</strong> Radiation may travel as waves or particles and can be ionizing or non-ionizing.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 class="topic-title">6. Units of Radiation</h3>
+                <p><strong>Definition:</strong> Radiation is measured using different units depending on what is being assessed:</p>
+                <ul>
+                    <li><strong>Becquerel (Bq):</strong> Measures the activity of a radioactive source.</li>
+                    <li><strong>Gray (Gy):</strong> Measures the absorbed dose of radiation in tissue.</li>
+                    <li><strong>Sievert (Sv):</strong> Measures the overall biological effect of radiation on living tissue.</li>
+                </ul>
+                <div class="box-example"><strong>Example:</strong> A patient's radiation dose during a procedure is commonly expressed in milligray (mGy) or millisievert (mSv).</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Knowledge of radiation units helps radiographers monitor patient doses, compare procedures, and ensure safe radiation practice.</div>
+                <div class="box-summary"><strong>Summary:</strong> Becquerel measures activity, Gray measures absorbed dose, and Sievert measures biological effect.</div>
+            </section>
+
+            <!-- MODULE 2: X-RAY PRODUCTION & EQUIPMENT -->
+            <h2 class="module-header">Module 2: X-ray Production & Equipment</h2>
+
+            <section class="card topic-card">
+                <span class="badge">X-ray Production</span>
+                <h3 class="topic-title">1. Cathode & Thermionic Emission</h3>
+                <p>Heating the tungsten filament in the cathode releases free electrons into space via <em>thermionic emission</em>.</p>
+                
+                <!-- Interactive Cathode Simulation -->
+                <div class="sim-box">
+                    <strong>Interactive Simulation: Filament Heat Control</strong>
+                    <div class="slider-group">
+                        <label>Filament Heat (mA Control):</label>
+                        <input type="range" id="heatSlider" min="1" max="10" value="3" oninput="updateHeatSim(this.value)">
+                    </div>
+                    <div class="sim-canvas" id="cathodeCanvas">
+                        <span id="cloudText">Electron Cloud Density: Low</span>
+                    </div>
+                </div>
+
+                <div class="box-example"><strong>Example:</strong> The filament in the cathode is heated before every exposure to release electrons.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Increasing mAs increases filament heat, producing more electrons and a higher quantity of X-rays.</div>
+                <div class="box-summary"><strong>Summary:</strong> Cathode releases electrons; Anode converts their energy into X-rays and heat.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">X-ray Production</span>
+                <h3 class="topic-title">2. Bremsstrahlung Radiation</h3>
+                <p><strong>Definition:</strong> "Bremsstrahlung" means braking radiation. Occurs when a high-speed electron passes near the nucleus of a tungsten atom, slows down, changes direction, and releases its lost energy as an X-ray photon.</p>
+                <div class="box-example"><strong>Example:</strong> About 85% to 90% of diagnostic X-rays produced in the beam are Bremsstrahlung radiation.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Bremsstrahlung radiation provides the majority of useful diagnostic photons in the primary beam.</div>
+                <div class="box-summary"><strong>Summary:</strong> Produced when fast electrons slow down and deflect near the tungsten nucleus.</div>
+            </section>
+
+            <section class="card topic-card">
+                <span class="badge">X-ray Production</span>
+                <h3 class="topic-title">3. Characteristic Radiation</h3>
+                <p><strong>Definition:</strong> Occurs when a high-speed electron knocks out an inner-shell electron of a tungsten atom. An outer-shell electron drops down to fill the empty space, releasing the energy difference as an X-ray photon.</p>
+                <div class="box-example"><strong>Example:</strong> Characteristic X-rays are produced when K-shell vacancies are filled in tungsten target atoms.</div>
+                <div class="box-relevance"><strong>Clinical Relevance:</strong> Contributes usefn class="card topic-card">
             <span class="badge">Basic Physics</span>
             <h3 class="topic-title">6. Units of Radiation</h3>
             <p><strong>Definition:</strong> Radiation is measured using different units depending on what is being assessed:</p>
@@ -400,301 +543,4 @@
     </script>
 </body>
 </html>
-          <h2 class="section-title">5. Types of Radiation</h2>
-            <p><strong>Description:</strong> Radiation is energy that travels through space or matter. It is classified into electromagnetic radiation (such as X-rays and gamma rays) and particulate radiation (such as alpha particles, beta particles, and neutrons). Radiation may also be ionizing or non-ionizing, depending on whether it can remove electrons from atoms.</p>
-            <div class="box-example"><strong>Example:</strong> X-rays are ionizing electromagnetic radiation, while visible light is non-ionizing radiation.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers work mainly with ionizing radiation because it can produce images but also has the potential to damage tissues if not properly controlled.</div>
-            <div class="box-summary"><strong>Summary:</strong> Radiation may be electromagnetic or particulate and may be ionizing or non-ionizing.</div>
-        </section>
-
-        <section id="p1-units" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">6. Units of Radiation</h2>
-            <p><strong>Description:</strong> Radiation is measured using different units depending on what is being assessed. The Gray (Gy) measures the absorbed dose, the Sievert (Sv) measures the biological effect of radiation, and the Becquerel (Bq) measures the activity of a radioactive source.</p>
-            <div class="box-example"><strong>Example:</strong> A patient's radiation dose during an examination is commonly expressed in Gray or milligray (mGy).</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Knowledge of radiation units helps radiographers monitor patient doses and ensure safe radiation practice.</div>
-            <div class="box-summary"><strong>Summary:</strong> Different radiation units measure radiation activity, absorbed dose, and biological effects.</div>
-        </section>
-
-        <section id="p1-electricity" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">7. Basic Electricity</h2>
-            <p><strong>Description:</strong> Electricity is the movement of electrons through a conductor. An electric current flows when a voltage pushes electrons through a circuit. In an X-ray machine, electricity supplies the energy needed to heat the filament and accelerate electrons toward the anode.</p>
-            <div class="box-example"><strong>Example:</strong> Switching on an X-ray machine allows electric current to heat the cathode filament.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Electricity is essential for producing X-rays and operating every component of the X-ray machine.</div>
-            <div class="box-summary"><strong>Summary:</strong> Electricity provides the energy required for X-ray production.</div>
-        </section>
-
-        <section id="p1-magnetism" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">8. Magnetism</h2>
-            <p><strong>Description:</strong> Magnetism is the force produced by moving electric charges. Every magnet has a north and south pole, and unlike poles attract while like poles repel. Electricity and magnetism are closely related because an electric current creates a magnetic field.</p>
-            <div class="box-example"><strong>Example:</strong> Electric motors inside rotating anode X-ray tubes operate using magnetic principles.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Magnetism is important in the operation of certain imaging equipment and electrical components used in radiography.</div>
-            <div class="box-summary"><strong>Summary:</strong> Magnetism is produced by moving electric charges and supports the operation of imaging equipment.</div>
-        </section>
-
-        <section id="p1-waves" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">9. Wave Properties</h2>
-            <p><strong>Description:</strong> A wave is a disturbance that transfers energy from one place to another. The main wave properties are wavelength, frequency, amplitude, and velocity. X-rays are electromagnetic waves and possess all these properties.</p>
-            <div class="box-example"><strong>Example:</strong> X-rays have much shorter wavelengths and higher frequencies than visible light.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding wave properties helps explain the penetrating ability and behavior of X-rays during imaging.</div>
-            <div class="box-summary"><strong>Summary:</strong> Wave properties determine how X-rays travel and interact with matter.</div>
-        </section>
-
-        <section id="p1-energy" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">10. Energy and Frequency</h2>
-            <p><strong>Description:</strong> Frequency is the number of wave cycles passing a point each second and is measured in Hertz (Hz). Energy is directly proportional to frequency, meaning that higher-frequency waves have higher energy. Since X-rays have very high frequencies, they also have high energies.</p>
-            <div class="box-example"><strong>Example:</strong> Gamma rays have higher frequencies and energies than visible light.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> The high energy of X-rays allows them to penetrate body tissues and produce diagnostic images.</div>
-            <div class="box-summary"><strong>Summary:</strong> Higher frequency means higher energy, which gives X-rays their penetrating power.</div>
-        </section>
-
-        <!-- PERSON 2 -->
-        <section id="p2-tube" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">1. X-ray Tube</h2>
-            <p><strong>Description:</strong> The X-ray tube is the main component of the X-ray machine that produces X-rays. It is a sealed vacuum tube containing two electrodes: the cathode and the anode. The vacuum allows electrons to travel freely from the cathode to the anode without colliding with air molecules.</p>
-            <div class="box-example"><strong>Example:</strong> During a chest X-ray, the X-ray tube produces the beam that passes through the patient's body to form an image.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> A properly functioning X-ray tube is essential for producing high-quality diagnostic images while ensuring safe and efficient operation.</div>
-            <div class="box-summary"><strong>Summary:</strong> The X-ray tube is the component where X-rays are produced.</div>
-        </section>
-
-        <section id="p2-electrodes" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">2. Cathode and Anode</h2>
-            <p><strong>Description:</strong> The cathode is the negative electrode that contains the filament and focusing cup. When heated, the filament releases electrons through thermionic emission. The anode is the positive electrode that attracts these electrons. When the electrons strike the tungsten target on the anode, X-rays are produced.</p>
-            <div class="box-example"><strong>Example:</strong> The filament in the cathode is heated before every exposure to release electrons.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> The cathode supplies electrons, while the anode converts their energy into X-rays for imaging.</div>
-            <div class="box-summary"><strong>Summary:</strong> The cathode produces electrons, and the anode converts their energy into X-rays.</div>
-        </section>
-
-        <section id="p2-housing" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">3. Tube Housing</h2>
-            <p><strong>Description:</strong> The tube housing is the protective outer casing surrounding the X-ray tube. It is lined with lead to reduce radiation leakage and filled with insulating oil that cools the tube and prevents overheating. It also protects users from electrical hazards.</p>
-            <div class="box-example"><strong>Example:</strong> After several exposures, the insulating oil absorbs the heat generated inside the tube.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Tube housing protects the patient, radiographer, and equipment by reducing leakage radiation and preventing overheating.</div>
-            <div class="box-summary"><strong>Summary:</strong> Tube housing provides shielding, cooling, and electrical protection.</div>
-        </section>
-
-        <section id="p2-brem" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">4. Bremsstrahlung Radiation</h2>
-            <p><strong>Description:</strong> Bremsstrahlung (braking) radiation is produced when high-speed electrons are slowed or deflected by the nucleus of a tungsten atom in the anode. The loss of kinetic energy is released as X-ray photons. This is the main type of X-ray produced in diagnostic radiography.</p>
-            <div class="box-example"><strong>Example:</strong> About 85-90% of the X-rays produced in a diagnostic X-ray tube are Bremsstrahlung radiation.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Bremsstrahlung radiation provides most of the X-rays used to produce diagnostic images.</div>
-            <div class="box-summary"><strong>Summary:</strong> Bremsstrahlung radiation is produced when electrons slow down near the nucleus.</div>
-        </section>
-
-        <section id="p2-char" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">5. Characteristic Radiation</h2>
-            <p><strong>Description:</strong> Characteristic radiation occurs when a high-speed electron removes an inner-shell electron from a tungsten atom. An outer-shell electron then fills the vacancy, releasing the energy difference as an X-ray photon. The energy produced is characteristic of the target material.</p>
-            <div class="box-example"><strong>Example:</strong> Characteristic radiation is commonly produced in tungsten target X-ray tubes.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> It contributes to the useful X-ray beam and improves image quality.</div>
-            <div class="box-summary"><strong>Summary:</strong> Characteristic radiation occurs when outer-shell electrons fill inner-shell vacancies.</div>
-        </section>
-
-        <section id="p2-factors" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">6. Exposure Factors (kVp, mAs, Time)</h2>
-            <p><strong>Description:</strong> Exposure factors determine the quantity and quality of X-rays produced. <strong>kVp (Kilovoltage Peak):</strong> Controls the energy and penetrating power of the X-ray beam. <strong>mAs (Milliampere-seconds):</strong> Controls the number of X-rays produced. <strong>Exposure Time:</strong> Determines how long X-rays are produced.</p>
-            <div class="box-example"><strong>Example:</strong> A chest X-ray usually requires a high kVp and a short exposure time.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Correct exposure factors produce clear images while minimizing patient radiation dose.</div>
-            <div class="box-summary"><strong>Summary:</strong> kVp controls beam quality, while mAs and time control beam quantity.</div>
-        </section>
-
-        <section id="p2-filtration" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">7. Filtration</h2>
-            <p><strong>Description:</strong> Filtration removes low-energy X-rays from the beam before they reach the patient. These low-energy photons would be absorbed by the skin without improving image quality. Filtration may be inherent (from the tube itself) or added (usually aluminium).</p>
-            <div class="box-example"><strong>Example:</strong> An aluminium filter removes low-energy X-rays before the beam exits the tube.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Filtration reduces unnecessary patient dose while maintaining image quality.</div>
-            <div class="box-summary"><strong>Summary:</strong> Filtration removes low-energy X-rays that are not useful for imaging.</div>
-        </section>
-
-        <section id="p2-collimation" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">8. Collimation</h2>
-            <p><strong>Description:</strong> Collimation restricts the size and shape of the X-ray beam to the area being examined. It reduces the amount of tissue exposed to radiation and decreases scatter radiation.</p>
-            <div class="box-example"><strong>Example:</strong> During a wrist X-ray, the beam is collimated to cover only the wrist instead of the whole arm.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Collimation improves image quality and reduces patient radiation exposure.</div>
-            <div class="box-summary"><strong>Summary:</strong> Collimation limits the X-ray beam to the area of interest.</div>
-        </section>
-
-        <section id="p2-grids" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">9. Grids</h2>
-            <p><strong>Description:</strong> A grid is a device placed between the patient and the image receptor. It consists of thin lead strips that absorb scattered radiation before it reaches the detector, thereby improving image contrast.</p>
-            <div class="box-example"><strong>Example:</strong> Grids are commonly used during abdominal and pelvic radiography because these body parts produce more scatter radiation.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Grids improve image quality but require a slightly higher radiation exposure.</div>
-            <div class="box-summary"><strong>Summary:</strong> Grids absorb scatter radiation and improve image contrast.</div>
-        </section>
-
-        <section id="p2-transformers" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">10. Transformers</h2>
-            <p><strong>Description:</strong> Transformers change the voltage supplied to the X-ray machine. Step-up transformers increase voltage to produce X-rays. Step-down transformers decrease voltage for heating the filament.</p>
-            <div class="box-example"><strong>Example:</strong> The filament circuit uses a step-down transformer to supply low voltage.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Transformers ensure the correct voltage reaches different parts of the X-ray machine.</div>
-            <div class="box-summary"><strong>Summary:</strong> Transformers increase or decrease voltage as required.</div>
-        </section>
-
-        <section id="p2-rectification" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">11. Rectification</h2>
-            <p><strong>Description:</strong> Rectification converts alternating current (AC) into direct current (DC). This allows electrons to flow in only one direction—from the cathode to the anode—making X-ray production possible.</p>
-            <div class="box-example"><strong>Example:</strong> Without rectification, electrons would move back and forth instead of producing X-rays.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Rectification ensures efficient and continuous X-ray production.</div>
-            <div class="box-summary"><strong>Summary:</strong> Rectification changes AC into DC for one-way electron flow.</div>
-        </section>
-
-        <section id="p2-generators" class="card topic-card">
-            <span class="badge">Person 2: Production & Equipment</span>
-            <h2 class="section-title">12. Generators</h2>
-            <p><strong>Description:</strong> The generator supplies and controls the electrical power used by the X-ray machine. It works with transformers and rectifiers to provide the correct voltage and current needed for each exposure.</p>
-            <div class="box-example"><strong>Example:</strong> When a radiographer selects the exposure factors, the generator delivers the required electrical power.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> The generator ensures consistent X-ray output and accurate exposure settings, leading to high-quality images.</div>
-            <div class="box-summary"><strong>Summary:</strong> The generator provides and controls the electrical power needed to produce X-rays.</div>
-        </section>
-
-        <!-- PERSON 3 -->
-        <section id="p3-interactions" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">1. Interaction of Radiation with Matter</h2>
-            <p><strong>Description:</strong> Interaction of radiation with matter refers to what happens when X-rays pass through a material or the human body. X-rays may be absorbed, scattered, or pass through without interaction. The type of interaction depends on the energy of the X-ray beam and the density of the tissue.</p>
-            <div class="box-example"><strong>Example:</strong> When a chest X-ray is taken, some X-rays pass through the lungs, while others are absorbed by the ribs and spine.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding radiation interactions helps radiographers produce high-quality images while minimizing patient dose.</div>
-            <div class="box-summary"><strong>Summary:</strong> X-rays may be absorbed, scattered, or transmitted when they interact with matter.</div>
-        </section>
-
-        <section id="p3-photoelectric" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">2. Photoelectric Effect</h2>
-            <p><strong>Description:</strong> The photoelectric effect occurs when an X-ray photon transfers all its energy to an inner-shell electron, ejecting it from the atom. The photon disappears completely after the interaction. This effect occurs more often in dense tissues such as bone and at lower kVp.</p>
-            <div class="box-example"><strong>Example:</strong> Bones appear white on an X-ray because they absorb more X-rays through the photoelectric effect.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> The photoelectric effect improves image contrast but increases the patient's absorbed radiation dose.</div>
-            <div class="box-summary"><strong>Summary:</strong> Complete absorption of an X-ray photon produces good image contrast but increases patient dose.</div>
-        </section>
-
-        <section id="p3-compton" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">3. Compton Scattering</h2>
-            <p><strong>Description:</strong> Compton scattering occurs when an X-ray photon strikes an outer-shell electron. Part of the photon's energy is transferred to the electron, while the remaining energy causes the photon to scatter in another direction.</p>
-            <div class="box-example"><strong>Example:</strong> Scattered X-rays may reach the image receptor and make the image appear foggy.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Compton scatter reduces image quality and increases unnecessary radiation exposure to radiographers and nearby individuals.</div>
-            <div class="box-summary"><strong>Summary:</strong> Compton scattering produces scattered radiation that lowers image quality.</div>
-        </section>
-
-        <section id="p3-attenuation" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">4. Attenuation</h2>
-            <p><strong>Description:</strong> Attenuation is the reduction in the intensity of an X-ray beam as it passes through matter. It occurs due to absorption and scattering of X-ray photons. Dense tissues attenuate more X-rays than soft tissues.</p>
-            <div class="box-example"><strong>Example:</strong> Bone attenuates more X-rays than muscle, making it appear whiter on a radiograph.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Attenuation creates image contrast, allowing different body structures to be distinguished.</div>
-            <div class="box-summary"><strong>Summary:</strong> Attenuation is the reduction of X-ray intensity as it passes through the body.</div>
-        </section>
-
-        <section id="p3-isl" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">5. Inverse Square Law</h2>
-            <p><strong>Description:</strong> The inverse square law states that the intensity of an X-ray beam decreases as the distance from the source increases. If the distance is doubled, the intensity becomes one-quarter; if the distance is tripled, it becomes one-ninth.</p>
-            <div class="box-example"><strong>Example:</strong> A radiographer standing farther away from the X-ray source receives less radiation exposure.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> The inverse square law is one of the most important methods of reducing radiation exposure for both patients and radiographers.</div>
-            <div class="box-summary"><strong>Summary:</strong> Increasing distance greatly reduces radiation intensity.</div>
-        </section>
-
-        <section id="p3-quality" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">6. Image Quality</h2>
-            <p><strong>Description:</strong> Image quality refers to how clearly anatomical structures are shown on a radiograph. Good image quality depends on proper exposure, positioning, contrast, sharpness, and minimal noise.</p>
-            <div class="box-example"><strong>Example:</strong> A well-exposed chest radiograph clearly shows the lungs, heart, ribs, and diaphragm.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> High-quality images improve diagnosis and reduce the need for repeat examinations.</div>
-            <div class="box-summary"><strong>Summary:</strong> Good image quality produces clear, accurate diagnostic images.</div>
-        </section>
-
-        <section id="p3-density" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">7. Density (Brightness)</h2>
-            <p><strong>Description:</strong> Density (film imaging) or brightness (digital imaging) refers to the overall darkness or lightness of a radiographic image. It is mainly affected by the amount of radiation reaching the image receptor.</p>
-            <div class="box-example"><strong>Example:</strong> An underexposed X-ray appears too light, while an overexposed image appears too dark.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Correct density or brightness ensures that anatomical structures are visible for accurate diagnosis.</div>
-            <div class="box-summary"><strong>Summary:</strong> Density or brightness describes how dark or light a radiograph appears.</div>
-        </section>
-
-        <section id="p3-contrast" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">8. Contrast</h2>
-            <p><strong>Description:</strong> Contrast is the difference in brightness or density between different areas of a radiograph. High contrast shows black and white shades, while low contrast shows many shades of gray. Contrast is mainly influenced by kVp.</p>
-            <div class="box-example"><strong>Example:</strong> Bone and air produce high contrast because they absorb X-rays differently.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Good contrast helps radiologists identify fractures, infections, and other abnormalities.</div>
-            <div class="box-summary"><strong>Summary:</strong> Contrast helps distinguish one structure from another on an image.</div>
-        </section>
-
-        <section id="p3-noise" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">9. Noise</h2>
-            <p><strong>Description:</strong> Noise is unwanted random variation that reduces image clarity. It may result from low radiation exposure, electronic interference, or image processing errors. Excessive noise can hide important anatomical details.</p>
-            <div class="box-example"><strong>Example:</strong> A very grainy radiograph is an example of image noise.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Reducing noise improves image quality and reduces the need for repeat exposures.</div>
-            <div class="box-summary"><strong>Summary:</strong> Noise decreases image clarity and may hide important findings.</div>
-        </section>
-
-        <section id="p3-protection" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">10. Radiation Protection</h2>
-            <p><strong>Description:</strong> Radiation protection consists of measures used to reduce unnecessary exposure to ionizing radiation. The three basic principles are time, distance, and shielding.</p>
-            <div class="box-example"><strong>Example:</strong> A radiographer wears a lead apron and stands behind a protective barrier during exposure.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiation protection keeps patients, radiographers, and the public safe from unnecessary radiation.</div>
-            <div class="box-summary"><strong>Summary:</strong> Radiation protection minimizes unnecessary exposure to ionizing radiation.</div>
-        </section>
-
-        <section id="p3-limits" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">11. Dose Limits</h2>
-            <p><strong>Description:</strong> Dose limits are maximum recommended levels of radiation exposure for radiation workers and the public over a given period to reduce long-term radiation risks.</p>
-            <div class="box-example"><strong>Example:</strong> A radiographer wears a dosimeter to track annual radiation exposure.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Monitoring radiation dose protects healthcare workers and ensures safe working conditions.</div>
-            <div class="box-summary"><strong>Summary:</strong> Dose limits help protect radiation workers and the public from excessive radiation exposure.</div>
-        </section>
-
-        <section id="p3-effects" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">12. Biological Effects of Radiation</h2>
-            <p><strong>Description:</strong> Biological effects occur when ionizing radiation damages living cells. These are categorized into <strong>deterministic effects</strong> (threshold-dependent, like skin erythema or cataracts) and <strong>stochastic effects</strong> (no threshold, probabilistic risk like cancer or genetic mutations).</p>
-            <div class="box-example"><strong>Example:</strong> A patient receiving repeated unnecessary X-ray examinations may have a slightly increased lifetime risk of developing cancer.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding biological effects reminds radiographers why every exposure must be justified and optimized.</div>
-            <div class="box-summary"><strong>Summary:</strong> Radiation may damage living cells, producing deterministic or stochastic effects.</div>
-        </section>
-
-        <section id="p3-alara" class="card topic-card">
-            <span class="badge">Person 3: Protection & Quality</span>
-            <h2 class="section-title">13. ALARA Principle</h2>
-            <p><strong>Description:</strong> ALARA stands for <em>As Low As Reasonably Achievable</em>. It means that radiation exposure should always be kept as low as possible while still producing a diagnostic-quality image.</p>
-            <div class="box-example"><strong>Example:</strong> A radiographer carefully selects the correct exposure factors for a child's chest X-ray to keep the dose minimal while keeping the image clear.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> ALARA is the foundation of safe radiographic practice and should guide every examination performed.</div>
-            <div class="box-summary"><strong>Summary:</strong> ALARA means using the lowest radiation dose that still produces a diagnostic-quality image.</div>
-        </section>
-
-    </main>
-
-    <script>
-        function filterTopics() {
-            let input = document.getElementById('search-bar').value.toLowerCase();
-            let cards = document.getElementsByClassName('topic-card');
-
-            for (let i = 0; i < cards.length; i++) {
-                let text = cards[i].innerText.toLowerCase();
-                if (text.includes(input)) {
-                    cards[i].style.display = "block";
-                } else {
-                    cards[i].style.display = "none";
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+        
