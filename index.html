@@ -540,9 +540,15 @@
                 cards.forEach(card => card.style.display = "block");
             }
         }
+    // Initialize Supabase Credentials
+    const SUPABASE_URL = 'https://krrcvuvurzlwgkipsobm.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtycmN2dXZ1cnpsd2draXBzb2JtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDE0MjUsImV4cCI6MjEwNTkxNzQyNX0.uaKym7WdLf5mPfIGR46i2lSY2PJLgq8w1C-LYTah5HQ';
+
+    // Initialize Supabase Client
+    const supabase = (typeof supabase !== 'undefined' && SUPABASE_URL !== '') 
+        ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) 
+        : null;
     </script>
 </body>
 </html>
-        const SUPABASE_URL = 'https://krrcvuvurzlwgkipsobm.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtycmN2dXZ1cnpsd2draXBzb2JtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNDE0MjUsImV4cCI6MjEwNTkxNzQyNX0.uaKym7WdLf5mPfIGR46i2lSY2PJLgq8w1C-LYTah5HQ';
 
