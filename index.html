@@ -3,147 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radiation Physics Study Guide | 200-Level Radiography</title>
+    <title>RadLab+ | Preclinical Radiography Platform</title>
     <style>
         :root {
-            --bg-main: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --border: #334155;
+            --bg-main: #faf8f5;
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-muted: #666666;
+            --accent: #ff6b4a;
+            --accent-hover: #e05537;
+            --border: #e8e3dc;
+            --shadow: 0 4px 15px rgba(0,0,0,0.05);
+            --radius: 14px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: system-ui, -apple-system, sans-serif; background-color: var(--bg-main); color: var(--text-main); display: flex; min-height: 100vh; }
-        
-        /* Layout */
-        #sidebar { width: 320px; background: #020617; border-right: 1px solid var(--border); padding: 1.5rem; position: fixed; height: 100vh; overflow-y: auto; }
-        #main-content { margin-left: 320px; padding: 2.5rem; flex-grow: 1; max-width: 900px; }
-        
-        /* Navigation */
-        h1.logo { font-size: 1.2rem; color: var(--accent); margin-bottom: 1rem; }
-        .nav-group { margin-bottom: 1.5rem; }
-        .nav-group h2 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.2rem; }
-        .nav-group a { display: block; color: var(--text-main); text-decoration: none; padding: 0.3rem 0; font-size: 0.9rem; }
-        .nav-group a:hover { color: var(--accent); }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 80px; }
 
-        /* Article Cards */
-        .card { background: var(--bg-card); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid var(--border); }
-        h2.section-title { font-size: 1.4rem; color: var(--accent); margin-bottom: 0.8rem; }
-        .badge { display: inline-block; background: #0369a1; color: white; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-bottom: 0.5rem; }
-        p { line-height: 1.6; color: #cbd5e1; margin-bottom: 0.8rem; }
-        
-        .box-example { background: #1e1b4b; border-left: 4px solid #818cf8; padding: 0.8rem; margin: 0.8rem 0; border-radius: 0 4px 4px 0; font-size: 0.95rem; }
-        .box-relevance { background: #172554; border-left: 4px solid var(--accent); padding: 0.8rem; margin: 0.8rem 0; border-radius: 0 4px 4px 0; font-size: 0.95rem; }
-        .box-summary { background: #052e16; border-left: 4px solid #22c55e; padding: 0.8rem; margin: 0.8rem 0; border-radius: 0 4px 4px 0; font-size: 0.95rem; }
-        
-        /* Search Bar */
-        #search-bar { width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-card); color: white; margin-bottom: 1.5rem; }
+        /* Typography */
+        h1, h2, h3 { font-family: "Georgia", "Times New Roman", serif; color: #111111; font-weight: 700; }
 
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            #sidebar { width: 100%; height: auto; position: relative; }
-            #main-content { margin-left: 0; padding: 1rem; }
-        }
+        /* Header & Smart Search */
+        header { background: var(--card-bg); padding: 1rem 1.2rem; border-bottom: 1px solid var(--border); sticky: top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; color: var(--accent); font-weight: 800; font-family: "Georgia", serif; }
+        .search-box { width: 55%; position: relative; }
+        .search-box input { width: 100%; padding: 0.5rem 0.8rem; border-radius: 20px; border: 1px solid var(--border); background: #f4f0ea; font-size: 0.85rem; outline: none; }
+
+        /* Container */
+        .container { max-width: 600px; margin: 0 auto; padding: 1.2rem; }
+
+        /* Dashboard Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--card-bg); padding: 0.8rem; border-radius: var(--radius); text-align: center; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .stat-val { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
+        .stat-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* Section Cards */
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 1.2rem; margin-bottom: 1.2rem; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; }
+        .badge { background: #ffeae5; color: var(--accent); padding: 0.25rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+        
+        p { line-height: 1.5; color: #444444; font-size: 0.95rem; margin-bottom: 0.8rem; }
+
+        /* Interactive Simulation Box */
+        .sim-box { background: #fdfaf6; border: 2px dashed var(--accent); padding: 1rem; border-radius: 10px; text-align: center; margin: 1rem 0; }
+        .sim-canvas { background: #222; height: 120px; border-radius: 8px; margin: 0.8rem 0; display: flex; justify-content: center; align-items: center; color: #fff; font-size: 0.85rem; position: relative; overflow: hidden; }
+        
+        /* Interactive Controls */
+        .sim-btn { background: var(--accent); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
+        .sim-btn:hover { background: var(--accent-hover); }
+        .slider-group { margin: 0.8rem 0; text-align: left; }
+        .slider-group label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 0.3rem; }
+        .slider-group input { width: 100%; }
+
+        /* Tab Content Switching */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Bottom Bar Navigation */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 0.8rem 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.03); }
+        .nav-item { text-align: center; color: var(--text-muted); text-decoration: none; font-size: 0.75rem; cursor: pointer; }
+        .nav-item.active { color: var(--accent); font-weight: bold; }
+        .nav-icon { font-size: 1.2rem; display: block; margin-bottom: 0.2rem; }
     </style>
 </head>
 <body>
 
-    <nav id="sidebar">
-        <h1 class="logo">⚡ Radiation Physics</h1>
-        <input type="text" id="search-bar" placeholder="Search topics..." onkeyup="filterTopics()">
-        
-        <div class="nav-group">
-            <h2>Person 1: Foundations</h2>
-            <a href="#p1-matter">1. Nature of Matter</a>
-            <a href="#p1-atoms">2. Atomic Structure</a>
-            <a href="#p1-spectrum">3. Electromagnetic Spectrum</a>
-            <a href="#p1-ionization">4. Ionization</a>
-            <a href="#p1-types">5. Types of Radiation</a>
-            <a href="#p1-units">6. Units of Radiation</a>
-            <a href="#p1-electricity">7. Basic Electricity</a>
-            <a href="#p1-magnetism">8. Magnetism</a>
-            <a href="#p1-waves">9. Wave Properties</a>
-            <a href="#p1-energy">10. Energy and Frequency</a>
+    <!-- Header -->
+    <header>
+        <div class="logo">RadLab+</div>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search topics, formulas..." onkeyup="searchApp()">
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- TAB 1: HOME DASHBOARD -->
+        <div id="home-tab" class="tab-content active">
+            
+            <!-- Gamification Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-val">🔥 5 Days</div>
+                    <div class="stat-lbl">Daily Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">⚡ 350</div>
+                    <div class="stat-lbl">Total XP</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-val">🎯 82%</div>
+                    <div class="stat-lbl">Mastery Score</div>
+                </div>
+            </div>
+
+            <h2>Preclinical Modules</h2>
+            <br>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Radiation Physics</h3>
+                    <span class="badge">MVP Scope</span>
+                </div>
+                <p>Master atomic structure, X-ray production, equipment, transformers, and exposure factors.</p>
+                <button class="sim-btn" onclick="switchTab('learn')">Start Learning →</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Radiation Protection</h3>
+                    <span class="badge">Core</span>
+                </div>
+                <p>Understand ALARA principles, dose limits, monitoring, and shielding design.</p>
+                <button class="sim-btn" onclick="switchTab('learn')">Explore Protection →</button>
+            </div>
         </div>
 
-        <div class="nav-group">
-            <h2>Person 2: Equipment</h2>
-            <a href="#p2-tube">1. X-ray Tube</a>
-            <a href="#p2-electrodes">2. Cathode and Anode</a>
-            <a href="#p2-housing">3. Tube Housing</a>
-            <a href="#p2-brem">4. Bremsstrahlung Radiation</a>
-            <a href="#p2-char">5. Characteristic Radiation</a>
-            <a href="#p2-factors">6. Exposure Factors</a>
-            <a href="#p2-filtration">7. Filtration</a>
-            <a href="#p2-collimation">8. Collimation</a>
-            <a href="#p2-grids">9. Grids</a>
-            <a href="#p2-transformers">10. Transformers</a>
-            <a href="#p2-rectification">11. Rectification</a>
-            <a href="#p2-generators">12. Generators</a>
+        <!-- TAB 2: LEARN & INTERACTIVE SIMULATIONS -->
+        <div id="learn-tab" class="tab-content">
+            
+            <h2>Radiation Physics Lessons</h2>
+            <br>
+
+            <!-- Bohr Model Ionization Simulation -->
+            <div class="card topic-card">
+                <span class="badge">Foundations</span>
+                <h3 style="margin-top: 0.4rem;">1. Atomic Structure & Ionization</h3>
+                <p>When an X-ray photon strikes an atom with sufficient energy, it ejects an electron from its orbit, leaving behind a positively charged ion.</p>
+                
+                <div class="sim-box">
+                    <strong>Interactive Simulation: Bohr Model Ionization</strong>
+                    <div class="sim-canvas" id="bohrCanvas">
+                        <div id="nucleus" style="width: 20px; height: 20px; background: #ff6b4a; border-radius: 50%;"></div>
+                        <div id="electron" style="width: 10px; height: 10px; background: #38bdf8; border-radius: 50%; position: absolute; left: 65%;"></div>
+                    </div>
+                    <button class="sim-btn" onclick="runIonizeSim()">Tap to Ionize Atom</button>
+                    <p id="simStatus" style="font-size: 0.8rem; margin-top: 0.5rem; color: #666;">Atom Status: Neutral</p>
+                </div>
+
+                <p><strong>Clinical Relevance:</strong> Ionization produces the contrast needed for radiographs, but can cause biological tissue damage if uncontrolled.</p>
+            </div>
+
+            <!-- Cathode Thermionic Emission Simulation -->
+            <div class="card topic-card">
+                <span class="badge">X-ray Production</span>
+                <h3 style="margin-top: 0.4rem;">2. Cathode & Thermionic Emission</h3>
+                <p>Heating the tungsten filament in the cathode releases free electrons into space via <em>thermionic emission</em>.</p>
+                
+                <div class="sim-box">
+                    <strong>Interactive Simulation: Filament Heat Control</strong>
+                    <div class="slider-group">
+                        <label>Filament Heat (mA Control):</label>
+                        <input type="range" id="heatSlider" min="1" max="10" value="3" oninput="updateHeatSim(this.value)">
+                    </div>
+                    <div class="sim-canvas" id="cathodeCanvas" style="background: #111;">
+                        <span id="cloudText">Electron Cloud Density: Low</span>
+                    </div>
+                </div>
+
+                <p><strong>Clinical Relevance:</strong> Increasing mAs increases filament heat, producing more electrons and a higher quantity of X-rays.</p>
+            </div>
+
+            <!-- Inverse Square Law Simulation -->
+            <div class="card topic-card">
+                <span class="badge">Exposure Factors</span>
+                <h3 style="margin-top: 0.4rem;">3. Inverse Square Law</h3>
+                <p>Radiation intensity is inversely proportional to the square of the distance from the source ($I_1 / I_2 = D_2^2 / D_1^2$).</p>
+                
+                <div class="sim-box">
+                    <strong>Interactive Simulation: Distance vs. Beam Spread</strong>
+                    <div class="slider-group">
+                        <label>Source-to-Image Distance (SID): <span id="distVal">1</span> meter</label>
+                        <input type="range" min="1" max="4" value="1" id="distSlider" oninput="updateDistSim(this.value)">
+                    </div>
+                    <p>Calculated Intensity: <strong id="intensityVal" style="color: var(--accent);">100%</strong></p>
+                </div>
+
+                <p><strong>Clinical Relevance:</strong> Doubling your distance from the X-ray tube reduces your radiation exposure to 1/4 (25%).</p>
+            </div>
+
         </div>
 
-        <div class="nav-group">
-            <h2>Person 3: Protection</h2>
-            <a href="#p3-interactions">1. Radiation Interaction</a>
-            <a href="#p3-photoelectric">2. Photoelectric Effect</a>
-            <a href="#p3-compton">3. Compton Scattering</a>
-            <a href="#p3-attenuation">4. Attenuation</a>
-            <a href="#p3-isl">5. Inverse Square Law</a>
-            <a href="#p3-quality">6. Image Quality</a>
-            <a href="#p3-density">7. Density (Brightness)</a>
-            <a href="#p3-contrast">8. Contrast</a>
-            <a href="#p3-noise">9. Noise</a>
-            <a href="#p3-protection">10. Radiation Protection</a>
-            <a href="#p3-limits">11. Dose Limits</a>
-            <a href="#p3-effects">12. Biological Effects</a>
-            <a href="#p3-alara">13. ALARA Principle</a>
+        <!-- TAB 3: PRACTICE & QUIZZES -->
+        <div id="practice-tab" class="tab-content">
+            <h2>Practice & Flashcards</h2>
+            <br>
+            
+            <div class="card">
+                <h3>Daily Quiz</h3>
+                <p>Test your knowledge on X-ray production & protection principles.</p>
+                <div style="background: #f4f0ea; padding: 0.8rem; border-radius: 8px; margin-bottom: 0.8rem;">
+                    <strong>Q: Which interaction accounts for the majority of diagnostic X-rays?</strong>
+                </div>
+                <button class="sim-btn" style="width: 100%; margin-bottom: 0.5rem;" onclick="alert('Correct! Bremsstrahlung produces 85-90% of diagnostic X-rays.')">A) Bremsstrahlung Radiation</button>
+                <button class="sim-btn" style="width: 100%; background: #888;" onclick="alert('Incorrect. Try again!')">B) Characteristic Radiation</button>
+            </div>
+
+            <div class="card">
+                <h3>Flashcard Review</h3>
+                <p>Spaced-repetition formula cards (Free Tier).</p>
+                <div style="background: #fff; border: 2px solid var(--accent); padding: 1.5rem; border-radius: 10px; text-align: center;">
+                    <strong style="color: var(--accent);">ALARA Principle</strong>
+                    <p style="margin-top: 0.5rem;">As Low As Reasonably Achievable</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: MENU / TOOLS -->
+        <div id="menu-tab" class="tab-content">
+            <h2>Study Tools & Profile</h2>
+            <br>
+            <div class="card">
+                <h3>Formula Calculator</h3>
+                <p>Quick calculations for Inverse Square Law and mAs adjustments.</p>
+            </div>
+            <div class="card">
+                <h3>Glossary</h3>
+                <p>Searchable definitions for all 200-level radiography terms.</p>
+            </div>
+            <div class="card">
+                <h3>AI Study Assistant (Premium)</h3>
+                <p>Ask questions and generate custom practice questions instantly.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Mobile-First Bottom Navigation Bar -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home')">
+            <span class="nav-icon">🏠</span>
+            Home
+        </div>
+        <div class="nav-item" onclick="switchTab('learn')">
+            <span class="nav-icon">📚</span>
+            Learn
+        </div>
+        <div class="nav-item" onclick="switchTab('practice')">
+            <span class="nav-icon">🎯</span>
+            Practice
+        </div>
+        <div class="nav-item" onclick="switchTab('menu')">
+            <span class="nav-icon">⚙️</span>
+            Menu
         </div>
     </nav>
 
-    <main id="main-content">
-        
-        <!-- PERSON 1 -->
-        <section id="p1-matter" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">1. Nature of Matter</h2>
-            <p><strong>Description:</strong> Matter is anything that has mass and occupies space. Everything around us, including the human body, air, water, and X-ray equipment, is made of matter. Matter exists in three main states: solid, liquid, and gas.</p>
-            <div class="box-example"><strong>Example:</strong> Bones are solids, blood is a liquid, and air in the lungs is a gas.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Different tissues absorb X-rays differently because they are made of different types of matter. This difference produces the contrast seen on radiographs.</div>
-            <div class="box-summary"><strong>Summary:</strong> Matter is anything with mass and volume, and it determines how X-rays interact with the body.</div>
-        </section>
+    <script>
+        // Tab Navigation Switcher
+        function switchTab(tabName) {
+            let tabs = document.querySelectorAll('.tab-content');
+            let navs = document.querySelectorAll('.nav-item');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            navs.forEach(nav => nav.classList.remove('active'));
 
-        <section id="p1-atoms" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">2. Atomic Structure</h2>
-            <p><strong>Description:</strong> An atom is the smallest unit of an element that retains its chemical properties. It consists of a nucleus containing protons (positive charge) and neutrons (no charge), while electrons (negative charge) move around the nucleus in energy shells. Most interactions between X-rays and matter involve the electrons.</p>
-            <div class="box-example"><strong>Example:</strong> The tungsten target in an X-ray tube is made of atoms with many protons and electrons, making it suitable for X-ray production.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Understanding atomic structure helps explain how X-rays are produced, how ionization occurs, and how radiation interacts with body tissues.</div>
-            <div class="box-summary"><strong>Summary:</strong> Atoms are the basic building blocks of matter and form the foundation of radiation physics.</div>
-        </section>
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            if (tabName === 'home') navs[0].classList.add('active');
+            if (tabName === 'learn') navs[1].classList.add('active');
+            if (tabName === 'practice') navs[2].classList.add('active');
+            if (tabName === 'menu') navs[3].classList.add('active');
+            
+            window.scrollTo(0,0);
+        }
 
-        <section id="p1-spectrum" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">3. Electromagnetic Spectrum</h2>
-            <p><strong>Description:</strong> The electromagnetic spectrum is the complete range of electromagnetic waves arranged according to their wavelength and frequency. It includes radio waves, microwaves, infrared rays, visible light, ultraviolet rays, X-rays, and gamma rays. X-rays have short wavelengths and high frequencies, giving them enough energy to penetrate the body.</p>
-            <div class="box-example"><strong>Example:</strong> Visible light allows us to see objects, while X-rays allow radiographers to see structures inside the body.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers use the X-ray portion of the electromagnetic spectrum to produce diagnostic images while minimizing unnecessary radiation exposure.</div>
-            <div class="box-summary"><strong>Summary:</strong> The electromagnetic spectrum contains all electromagnetic waves, with X-rays used for medical imaging.</div>
-        </section>
+        // Bohr Model Simulation Script
+        function runIonizeSim() {
+            let electron = document.getElementById('electron');
+            let status = document.getElementById('simStatus');
+            electron.style.transition = "all 0.5s ease";
+            electron.style.left = "120%";
+            status.innerHTML = "Atom Status: <strong style='color:#ff6b4a;'>Ionized (+ Charge)</strong> | Electron Ejected!";
+            
+            setTimeout(() => {
+                electron.style.transition = "none";
+                electron.style.left = "65%";
+                status.innerHTML = "Atom Status: Neutral";
+            }, 2500);
+        }
 
-        <section id="p1-ionization" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">4. Ionization</h2>
-            <p><strong>Description:</strong> Ionization is the process by which an atom gains or loses electrons, becoming electrically charged. In diagnostic radiography, X-rays have enough energy to remove electrons from atoms, creating ions. This process can lead to biological effects in living tissues.</p>
-            <div class="box-example"><strong>Example:</strong> When an X-ray photon strikes a body cell and removes an electron, ionization has occurred.</div>
-            <div class="box-relevance"><strong>Clinical Relevance:</strong> Ionization is responsible for both the formation of X-ray images and the potential harmful effects of radiation, making radiation protection essential.</div>
-            <div class="box-summary"><strong>Summary:</strong> Ionization occurs when atoms gain or lose electrons after interacting with radiation.</div>
-        </section>
+        // Cathode Filament Simulation Script
+        function updateHeatSim(val) {
+            let text = document.getElementById('cloudText');
+            if(val < 4) text.innerText = "Electron Cloud Density: Low";
+            else if(val < 8) text.innerText = "Electron Cloud Density: Medium";
+            else text.innerText = "Electron Cloud Density: High (Thermionic Emission Max)";
+        }
 
-        <section id="p1-types" class="card topic-card">
-            <span class="badge">Person 1: Basic Physics</span>
-            <h2 class="section-title">5. Types of Radiation</h2>
+        // Inverse Square Law Simulation Script
+        function updateDistSim(val) {
+            document.getElementById('distVal').innerText = val;
+            let intensity = Math.round(100 / (val * val));
+            document.getElementById('intensityVal').innerText = intensity + "%";
+        }
+
+        // Smart Search Functionality
+        function searchApp() {
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            if(query.length > 2) {
+                switchTab('learn');
+                let cards = document.querySelectorAll('.topic-card');
+                cards.forEach(card => {
+                    if(card.innerText.toLowerCase().includes(query)) card.style.display = "block";
+                    else card.style.display = "none";
+                });
+            } else {
+                let cards = document.querySelectorAll('.topic-card');
+                cards.forEach(card => card.style.display = "block");
+            }
+        }
+    </script>
+</body>
+</html>
+          <h2 class="section-title">5. Types of Radiation</h2>
             <p><strong>Description:</strong> Radiation is energy that travels through space or matter. It is classified into electromagnetic radiation (such as X-rays and gamma rays) and particulate radiation (such as alpha particles, beta particles, and neutrons). Radiation may also be ionizing or non-ionizing, depending on whether it can remove electrons from atoms.</p>
             <div class="box-example"><strong>Example:</strong> X-rays are ionizing electromagnetic radiation, while visible light is non-ionizing radiation.</div>
             <div class="box-relevance"><strong>Clinical Relevance:</strong> Radiographers work mainly with ionizing radiation because it can produce images but also has the potential to damage tissues if not properly controlled.</div>
